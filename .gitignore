@@ -1,0 +1,41 @@
+# Con este patrón, todos los ficheros se incluirán en el repositorio
+# mientras que ficheros de 1_Software/*.o sera ignorarado
+1_Software/matrixmodG/*.ko
+1_Software/matrixmodG/*.mod.c
+1_Software/matrixmodG/*.mod.o
+1_Software/matrixmodG/*.o
+1_Software/matrixmodG/*.symvers
+1_Software/matrixmodG/*.order
+
+# Se ignoran todos los archivos .out del directorio Interfaz_para_pruebas
+1_Software/matrixmod/Interfaz_para_pruebas/*.out
+1_Software/matrixmod/Interfaz_para_pruebas/semaforos_IPC/*.out
+
+# Se ignoran todos los archivos .o de Liberias_kernel
+1_Software/matrixmod/Librerias_kernel/*.o
+
+# Se ignoran todos los archivos *.out de Liberias_usuario
+1_Software/matrixmod/Librerias_kernel/*.out
+
+# Se ignoran todos los archivos .out del directorio Llamadas_al_sistema
+1_Software/matrixmodG/Llamadas_al_sistema/*.out
+
+1_Software/matrixmodG/.tmp_versions/*
+
+# Se ignora todo el directorio de compilacion
+1_Software/matrixmodG/build/*
+
+# Se ignoran todos los archivos resultantes de la compilacion del modulo de prueba
+1_Software/matrixmodG/Casos_de_prueba/*.ko
+1_Software/matrixmodG/Casos_de_prueba/*.mod.c
+1_Software/matrixmodG/Casos_de_prueba/*.mod.o
+1_Software/matrixmodG/Casos_de_prueba/*.o
+1_Software/matrixmodG/Casos_de_prueba/*.symvers
+1_Software/matrixmodG/Casos_de_prueba/*.order
+1_Software/matrixmodG/Casos_de_prueba/.tmp_versions/
+
+# Se ignoran archivos .txt
+1_Software/generador_matrices/*.txt
+1_Software/matrixmodG/Interfaz_de_pruebas/RDPG/*
+1_Software/matrixmodG/Interfaz_C++/Pruebas_Sistema/RDPG/*
+1_Software/aplicacion_c++/Pruebas_Sistema/RDPG/*
