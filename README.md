@@ -1,4 +1,4 @@
-![Alt text](4_Otra_Info_PI/PI_Imagenes_2018/matrixmodG_intro5.png "Header MatrixMoG Project")
+![Alt text](matrixmodG_intro5.png "Header MatrixMoG Project")
 
 # Proyecto MatrixmodG
 El proyecto MatrixmodG se basa en la creación de un device driver  Linux para gestionar Redes de Petri Generalizadas en el kernel.
