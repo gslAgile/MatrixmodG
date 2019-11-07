@@ -8,6 +8,6 @@ Con la misma idea de Linux, que se democratiza como sistema operativo, el proyec
 
 El proyecto MatrixmodG es un proyecto open source (a código abierto) permitiendo que el proyecto sea libremente utilizado, estudiado, redistribuido y modificado por cualquier persona con los conocimientos informáticos y teóricos adecuados.
 
-Para contribuir con el proyecto solicita participar en la creación del proyecto como contribuidor de Github o envía tu solicitud a gsosaludu@gmail.com.
+Contacto de autor gsosaludu@gmail.com.
 
 Ver la [Wiki](https://github.com/gslAgile/Proyecto-MatrixmodG/wiki) para mas detalles.
