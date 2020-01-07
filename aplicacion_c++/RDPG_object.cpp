@@ -14,7 +14,6 @@
 
 #include "RDPG_object.hpp"
 
-
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------
  * DECLARACION DE VARIABLES GLOBALES PARA OBJETOS RDPG
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -406,7 +405,12 @@ void RDPG::import_RDPG(string p_mII, string p_mIH, string p_mIR, string p_mIRe, 
 		import_matrix(ref_mcomp(_mIR),p_mIR);
 	
 	if(!p_mIRe.empty())
+	{
 		import_matrix(ref_mcomp(_mIRe),p_mIRe);
+
+		/* Actualiza matriz de incidencia I de acuerdo a cambios a tener en cuenta segun arcos reset (mIRe).*/
+		update_mII(mIRe);
+	}
 	
 	if(!p_vMI.empty())
 		import_vector(ref_vcomp(_vMI),p_vMI);
@@ -559,6 +563,43 @@ void RDPG::update_work_components()
   update_vA();
   update_vEx();
   update_vHD();
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ * @brief      Este metodo se encarga de actualizar la matriz mII, segun los valores de los brazos indicados por la matriz enviada por parametro. 
+ * Por lo general la funcion es utilizada para actualiza la matriz mII cuando se carga la matriz mIRe.
+ * 
+ * @param      p_mo  Referencia a objeto del tipo matrix_o, desde el que se desea actualizar la matriz mII.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+void RDPG::update_mII(matrix_o& p_mo)
+{
+  int i,j;
+  
+  if( !mII.empty())
+  {
+  	  /* Validacion de misma dimension. */
+  	  if((mII.size() == p_mo.size()) && (mII[0].size() == p_mo[0].size()))
+  	  {
+  	  	for (i = 0; i < plazas; i++)
+	  	  {
+	  	    for (j = 0; j < transiciones; j++)
+	  	    {  
+		  	      if(p_mo[i][j] == 1){
+		  	        mII[i][j] = -1;
+		  	      }
+		  	}
+	  	  }
+	  	  if(RDPGO_DB_MSG) cout << " Actualizacion de componente mII con exito!!!\n";
+  	  }
+  	  else
+  		cout << " Error: Fallo actualizacion de mII. Matriz de parametro diferente dimension que mII!\n";
+   }
+   else
+   {
+   		cout << " Error: No es posible actualizar componente mII, el componente no existe!\n";
+   }
 }
 
 
@@ -1137,6 +1178,8 @@ void RDPG::print_mcomp(ID_MCOMPONENT p_mcomp)
 {
 	size_t i, j, vp, vt;
 
+	cout << endl << "Componente: " << NAME_MCOMP[p_mcomp] << endl;
+
 	print_headerT();
 
 	if((p_mcomp>=ID_MC_INIT) && (p_mcomp < ID_MC_END) && (p_mcomp != _mD))
@@ -1415,6 +1458,8 @@ void RDPG::reload_vector(ID_VCOMPONENT p_vcomp, int p_valor)
 void RDPG::print_vcomp(ID_VCOMPONENT p_vcomp)
 {
 	size_t i, v;		/* v: elementos visualizados. */
+
+	cout << endl << "Componente: " << NAME_VCOMP[p_vcomp] << endl;
 
 	if((p_vcomp>=_vMI) && (p_vcomp <= _vW) && (p_vcomp != _vE))
 	{

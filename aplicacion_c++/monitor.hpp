@@ -23,7 +23,7 @@
 #include <time.h>
 #include "RDPG_object.hpp"
 
-#define		N_TASKS		100000
+#define		N_TASKS		1000
 
 
 

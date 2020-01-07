@@ -45,6 +45,13 @@ enum ID_MCOMPONENT{
 	ID_MC_END					/**< Numero que indica el fin de las enumeraciones en ID_MCOMPONENT. */
 };
 
+const string NAME_MCOMP[] = {
+	"< Matriz de incidencia I >",
+	"< Matriz de brazos inhibidores H >",
+	"< Matriz de brazos lectores R >",
+	"< Matriz de brazos reset Re >",
+	"< Matriz de disparos disponibles D >"
+};
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------
  * ID_VCOMPONENT: Enumerador de los identificadores de los componentes vectores (vector_o) de una RDPG_o.
@@ -73,6 +80,22 @@ enum ID_VCOMPONENT{
 	ID_VC_END					/**< Numero que indica el fin de las enumeraciones en ID_VCOMPONENT.*/
 };	
 
+const string NAME_VCOMP[] = {
+	"< Vector de marcado inicial vMI >",
+	"< Vector de marcado de marcado actual vMA >",
+	"< Vector de marcado nuevo vMN >",
+	"< Vector de transiciones sensibilizadas E >",
+	"< Vector de funcion Q >",
+	"< Vector de funcion W >",
+	"< Vector de transiciones des-sensibilizadas B >",
+	"< Vector de transiciones des-sensibilizadas L >",
+	"< Vector de Transiciones des-sensibilizadas por guardas G >",
+	"< Vector de transiciones reset A >",
+	"< Vector de resultado de ultimo disparo de transicion UDT >",
+	"< Vector de transiciones sensibilizadas generalizado Ex >",
+	"< Vector de hilos en cola de variables de condicion HQCV >",
+	"< Vector de hilos a despertar HD >"
+};
 /**---------------------------------------------------------------------------------------------------------------------------------------------------------
  * RDPG_SHOT_RESULT: Enumerador de los resultados que puede devolver el ultimo disparo realizado de una RDPG_o.
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -171,6 +194,7 @@ private:
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 	void import_matrix(matrix_o&, string p_fname);
 	void import_vector(vector_o&, string p_fname);
+	void update_mII(matrix_o&);
 	void update_vE();
 	void update_vW();
 	void update_vQ();

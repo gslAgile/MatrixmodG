@@ -1,10 +1,16 @@
 /*------------------------------------------------------------------------------------------------------------------------------------------------------* 
- * Este include hace que este codigo sea un driver igual que matrixmod.c pero con las implementaciones de los test
- * definidos de manera separada para poder testear el modulo desde esta implementacion y dejar el modulo libre
- * de los test cunado quede funcional con todas las pruebas verificadas. Es decir que de esta forma se evita tener
- * que contar con el codigo de test cuando no es necesario, pero se incorpora durante el periodo de pruebas para
- * validar su funcionamiento.
+ * Libreria matrixmodG_tests.h/.c (archivo fuente - source file).
+ * 
+ * Esta libreria contiene todas las pruebas unitarias e integrales del DDL MatrixmodG generadas con uso del framework KTF. Este framework permite la 
+ * automatizacion de las pruebas haciendo el trabajo mas sencillo y eficiente.
+ * 
+ * El include a matrixmodG.c hace que este codigo sea un driver igual que matrixmodG.c pero con las declaraciones y definiciones de los test, separados
+ * del codigo fuente funcional, de esta forma se testea modulo desde esta implementacion y se deja el modulo libre de los test cunado quede funcional con
+ * todas las pruebas verificadas. Es decir que de esta forma se evita tener que contar con el codigo de test cuando no es necesario, pero se incorpora 
+ * durante el periodo de pruebas para validar su funcionamiento.
+ * 
  *------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #define MT_TEST_ON              /* Esta macro habilita a que el modulo entre en proceso de prueba con el framework KTF. */
 
 #include "../matrixmodG.c"

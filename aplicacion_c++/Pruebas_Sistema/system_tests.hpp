@@ -11,9 +11,9 @@
 #ifndef SYSTEM_TESTS_H
 #define SYSTEM_TESTS_H
 
-#include "../app.hpp"
+//#include "../app.hpp"
 #include "../monitor.hpp"
-//#include "../monitorCA2.hpp"
+#include "../monitorCA2.hpp"
 
 #define N_MUESTRAS	50
 
