@@ -1,3 +1,11 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Libreria mascii.h (archivo cabecera - header file).
+ * 
+ * 
+ * Esta libreria contiene un conjunto de funciones propias que trabajan sobre cadenas de caracteres en codigo ASCII.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef MASCII_LIB_H
 #define MASCII_LIB_H
 

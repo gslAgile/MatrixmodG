@@ -10,4 +10,7 @@ El proyecto MatrixmodG es un proyecto open source (a código abierto) permitiend
 
 Contacto de autor gsosaludu@gmail.com.
 
+Keywords: Red de Petri Generalizada, Device Driver Linux, Ambiente Multicore, Programación Paralela, Programación Concurrente.
+
+
 Ver la [Wiki](https://github.com/gslAgile/Proyecto-MatrixmodG/wiki) para mas detalles.

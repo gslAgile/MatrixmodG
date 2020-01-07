@@ -1,3 +1,18 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Libreria sformat_control.c (archivo fuente - source file).
+ * 
+ * 
+ * Esta libreria contiene un conjunto de funciones que trabajan sobre cadenas de caracteres, analizando los datos para la deteccion de errores y la adecuada
+ * extraccion de datos.
+ * 
+ * En caso de encontrar errores las funciones retornan un codigo de error asociado definido en la enumeracion enum TIPO_ERROR.
+ * 
+ * La libreria fue testeada por un conjunto de pruebas unitarias e integrales mediante el framework Kernel Test Framework (KTF). Es por lo cual la libreria 
+ * durante un proceso de ejecucion de pruebas, hace uso de las librerias KTF y habilita todas las funcionalidades del framework, en caso contrario por
+ * defecto, en proceso de ejecucion estandar, se ignoran todas las definiciones de KTF.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include "sformat_control.h"
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------

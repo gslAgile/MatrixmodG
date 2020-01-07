@@ -1,3 +1,25 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Libreria RDPG_object.h (archivo cabecera - header file).
+ * 
+ * 
+ * Esta libreria contiene las declaraciones y definiciones de la entidad RDPG_o y sus metodos asociados. Esta entidad permite
+ * gestionar las RDPG como objetos en el kernel de Linux. 
+ * 
+ * La libreria gestiona objetos matrices y vectores declarados y definidos en la libreria MV_object.h/.c, entidades que se utilizan como objetos que componen
+ * una RDPG.
+ * 
+ * La libreria proporciona control de errores de datos y formatos de datos propio determinado por la libreria sformat_control.h/.c.
+ * 
+ * La libreria provee de un conjunto de metodos de codigo SMPs para proteger las RDPG de los problemas de concurrencia. El mecanismo utilizado para brindar
+ * sincronizacion entre procesos concurrentes es mediante spinlocks lector-escritor. Se recomienda hacer uso de estos metodos para evitar errores de datos
+ * desde las aplicaciones de usuario.
+ * 
+ * La libreria fue testeada por un conjunto de pruebas unitarias e integrales mediante el framework Kernel Test Framework (KTF). Es por lo cual la libreria 
+ * durante un proceso de ejecucion de pruebas hace uso de las librerias KTF y habilita todas las funcionalidades del framework, en caso contrario por 
+ * defecto, en proceso de ejecucion estandar, se ignoran todas las definiciones de KTF.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef RDPG_LIB_H
 #define RDPG_LIB_H
 
@@ -214,6 +236,7 @@ struct RDPG_methods
 	void (*delete_rdpg)(RDPG_o *);
 	int (*add_value_in_mcomponent)(matrix_o *,char *);
 	int (*add_value_in_vcomponent)(vector_o *,char *);
+	int (*add_value_in_mIRe)(RDPG_o *, char*);
 	int (*add_value_vG)(RDPG_o *,char *);
 	void (*update_work_components)(RDPG_o *);
 	void (*update_vG)(RDPG_o *);
@@ -341,6 +364,7 @@ void delete_rdpg_vcomponent(vector_o *p_vo);
 void create_rdpg_mdisparos(matrix_o *p_mo, int p_c);
 int add_value_in_mcomponent(matrix_o *p_m, char *p_entrada);
 int add_value_in_vcomponent(vector_o *p_vo, char *p_entrada);
+int add_value_in_mIRe(RDPG_o *p_rdp, char *p_entrada);
 int add_value_vG(RDPG_o *p_rdp, char *p_entrada);
 int get_TokensPlace(RDPG_o *p_rdp, char *p_entrada);
 int get_vHDelement(RDPG_o *p_rdp, char *p_entrada);
@@ -391,6 +415,7 @@ int read_rdpg_info(RDPG_o *p_rdp, char *p_kbuf);
 int print_to_user(char *kbuf, char * p_buf, int p_len);
 
 static void getString_allocMode(RDPG_o *p_rdp);
+static void config_default_mode(RDPG_o *p_rdp);
 
 /* Declaracion de conjunto de funciones con proteccion SMP-secure*/
 int SMPs_disparar_rdpg(RDPG_o *p_rdp, int p_idT, SHOT_MODE p_mode);

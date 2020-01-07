@@ -1,3 +1,18 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Device Driver Linux MatrixmodG (archivo cabecera - header file).
+ * 
+ * 
+ * Este archivo forma parte del codigo fuente del Device Driver Linux MatrixmodG. Este driver se encarga de gestionar Redes de Petri Generalizadas (RDPG) 
+ * en eñ kernel de Linux mediante las solicitudes que indican las aplicaciones de usuario al archivo de dispositivo "/proc/matrixmod_fd".
+ * 
+ * Las RDPG se tratan como objetos RDPG_o creado como clase desde la libreria de kernel RDPG_object.h/.c.
+ * 
+ * La libreria fue testeada por un conjunto de pruebas unitarias e integrales mediante el framework Kernel Test Framework (KTF). Es por lo cual la libreria 
+ * durante un proceso de ejecucion de pruebas hace uso de las librerias KTF y habilita todas las funcionalidades del framework, en caso contrario por 
+ * defecto, en proceso de ejecucion estandar, se ignoran todas las definiciones de KTF.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef MATRIXMOD_H
 #define MATRIXMOD_H
 

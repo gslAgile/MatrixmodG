@@ -1,3 +1,25 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Libreria RDPG_object.c (archivo fuente - source file).
+ * 
+ * 
+ * Esta libreria contiene las declaraciones y definiciones de la entidad RDPG_o y sus metodos asociados. Esta entidad permite
+ * gestionar las RDPG como objetos en el kernel de Linux. 
+ * 
+ * La libreria gestiona objetos matrices y vectores declarados y definidos en la libreria MV_object.h/.c, entidades que se utilizan como objetos que componen
+ * una RDPG.
+ * 
+ * La libreria proporciona control de errores de datos y formatos de datos propio determinado por la libreria sformat_control.h/.c.
+ * 
+ * La libreria provee de un conjunto de metodos de codigo SMPs para proteger las RDPG de los problemas de concurrencia. El mecanismo utilizado para brindar
+ * sincronizacion entre procesos concurrentes es mediante spinlocks lector-escritor. Se recomienda hacer uso de estos metodos para evitar errores de datos
+ * desde las aplicaciones de usuario.
+ * 
+ * La libreria fue testeada por un conjunto de pruebas unitarias e integrales mediante el framework Kernel Test Framework (KTF). Es por lo cual la libreria 
+ * durante un proceso de ejecucion de pruebas hace uso de las librerias KTF y habilita todas las funcionalidades del framework, en caso contrario por 
+ * defecto, en proceso de ejecucion estandar, se ignoran todas las definiciones de KTF.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include "RDPG_object.h"
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -25,6 +47,7 @@ struct RDPG_methods RDPG_vtable =
   .delete_rdpg = delete_rdpg,
   .add_value_in_mcomponent = add_value_in_mcomponent,
   .add_value_in_vcomponent = add_value_in_vcomponent,
+  .add_value_in_mIRe = add_value_in_mIRe,
   .add_value_vG = add_value_vG,
   .update_work_components = update_work_components,
   .update_vG = update_vG,
@@ -300,8 +323,9 @@ extern void create_rdpg(RDPG_o *p_rdp, char * p_entrada)
         p_rdp->mc = OBJ_CREATED; /* Marco creacion de objeto RDPG garantizando creacion del resto de componentes. */
         count_global_RDPG_o++;
         p_rdp->obj_id = count_global_RDPG_o;
-        p_rdp->posVP = 0;
-        p_rdp->posVT = 0;
+        //p_rdp->posVP = 0;
+        //p_rdp->posVT = 0;
+        config_default_mode(p_rdp);
         itoa(p_rdp->mII.filas, p_rdp->s_plazas, N_BYTES);
         itoa(p_rdp->mII.columnas, p_rdp->s_transiciones, N_BYTES);
         index_components(p_rdp);
@@ -548,6 +572,55 @@ int add_value_in_vcomponent(vector_o *p_vo, char *p_entrada)
   else 
   {
      if(MATRIXMODG_DB_MSG) printk(KERN_ERR "MatrixmodG_error: No se pudo agregar valor. El vector %s no fue creado. \n", p_vo->name);
+    return -EC_falloADD;
+  }
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * @brief      Esta funcion agrega un valor sobre el componente matrix_o mIRe en las posiciones indicadas por parametro, para la RDPG_o indicada. La funcion 
+ * tambien asigna el valor -1 implicitamente sobre la matriz mII, ya que esto es necesario para el correcto funcionamiento del arco reset de una RDPG. 
+ * Las posiciones y el valor se envian desde una cadena de caracteres.
+ *
+ * @param      *p_m       Puntero a la direccion de memoria del objeto RDPG_o sobre el cual agregar un nuevo valor de su matriz mIRe.
+ * @param      p_entrada  Puntero a la cadena de caracteres que contiene la informacion de los datos de posiciones (fila y columna) y el valor a agregar.
+ *
+ * @return    -EC_falloADD: si no se pudo agregar el valor correctamente en la matriz indicada por parmetro.
+ * @return    valor agregado: si se pudo agragar el valor adecuadamente en la matriz y posiciones indicadas por parametro.
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+int add_value_in_mIRe(RDPG_o *p_rdp, char *p_entrada)
+{ 
+  int pos_f=0, pos_c=0, valor=0;
+  
+  /* Si existe matriz*/
+  if((p_rdp->mIRe.mc == OBJ_CREATED) && (p_rdp->mII.mc == OBJ_CREATED)){ /* Verifico si existen matrices a traves de marca de creacion.*/
+
+    /* Extraccion de posicion de fila, posicion de columna y valor desde cadena a variables enteras.*/
+    if(extraer_fcv(&pos_f, &pos_c, &valor, p_entrada)==EXTRACCION_OK) /* Si extraccion es exitosa. Agrego valor en la posicion indicada. */
+    {
+      if((pos_f < p_rdp->mII.filas) && (pos_c < p_rdp->mII.columnas)) /* Validacion de direcciones correctas en matriz. */
+      {
+        p_rdp->mIRe.matriz[pos_f][pos_c] = valor;
+        p_rdp->mII.matriz[pos_f][pos_c] = -1;      /* Se configura implicitamente un arco entre la plaza y transicion asociada. Con este arco el brazo reset funciona correctamente.*/
+        if(MATRIXMODG_DB_MSG) printk(KERN_INFO "MatrixmodG_info: Se actualizo valor de %s con matriz[%d][%d] = %d. \n", p_rdp->mIRe.name, pos_f, pos_c, valor);
+      }
+      else
+      {
+        if(MATRIXMODG_DB_MSG) printk(KERN_ERR "MatrixmodG_error: Fallo asignacion de elemento en componente %s. Referencia de fila/columna fuera de limites (direccion incorrecta). \n", p_rdp->mIRe.name);
+        return -EC_falloADD;
+      }
+    }
+    else /* Si extraccion de valores falla. Notificamos inconveniente. */
+    {
+      if(MATRIXMODG_DB_MSG) printk(KERN_ERR "MatrixmodG_error: Fallo extraccion de datos para matriz %s. \n", p_rdp->mIRe.name);
+      return -EC_falloADD;
+    }
+
+    return valor;
+  }
+  else 
+  {
+    if(MATRIXMODG_DB_MSG) printk(KERN_ERR "MatrixmodG_error: No se pudo agregar valor. La matriz %s no fue creada. \n", p_rdp->mIRe.name);
     return -EC_falloADD;
   }
 }
@@ -2206,7 +2279,7 @@ extern int print_rdpg_mcomponent(matrix_o *p_mo, char *p_kbuf, size_t p_posP, si
             (void)concat_x2(p_kbuf, s_space2, c_aux); /* Se concantena entero con un espacio previo ya que es negativo y utiliza un carater -. */
 
           else
-            (void)concat_x2(p_kbuf, s_space3, c_aux); /* Se concantena entero con un espacio previo ya que es negativo y utiliza un carater -. */
+            (void)concat_x2(p_kbuf, (char *)s_space3, c_aux); /* Se concantena entero con un espacio previo ya que es negativo y utiliza un carater -. */
         }
       } // Fin for 1
       
@@ -2418,16 +2491,22 @@ int read_rdpg_info(RDPG_o *p_rdp, char *p_kbuf)
 
       case ID_INFO_PLACES:
         (void)concat_x3(p_kbuf, "   - Numero de plazas de la RDPG: ", p_rdp->s_plazas, s_newLine);
-        (void)concat_x3(p_kbuf, "   - Plazas visibles de RDPG: ", p_rdp->s_header_plazas, s_newLine);   
+        //(void)concat_x3(p_kbuf, "   - Plazas visibles de RDPG: ", p_rdp->s_header_plazas, s_newLine);   
         break;
 
       case ID_INFO_TRANSITIONS:
         (void)concat_x3(p_kbuf, "   - Numero de transiciones de la RDPG: ", p_rdp->s_transiciones, s_newLine);
-        (void)concat_x3(p_kbuf, "   - Transiciones visibles de RDPG: ", p_rdp->s_header_transiciones, s_newLine);
+        //(void)concat_x3(p_kbuf, "   - Transiciones visibles de RDPG: ", p_rdp->s_header_transiciones, s_newLine);
         break;
 
       case ID_INFO_SHOTS:
-        (void)concat_x3(p_kbuf, "   - Disparos visibles de RDPG: ", p_rdp->s_header_disparos, s_newLine);
+        itoa(p_rdp->posVP, c_numaux, N_BYTES);
+        (void)concat_x3(p_kbuf, "   - Posicion de plaza inicial para visualizacion: ", c_numaux, s_newLine);
+        itoa(p_rdp->posVT, c_numaux, N_BYTES);
+        (void)concat_x3(p_kbuf, "   - Posicion de transicion inicial para visualizacion: ", c_numaux, s_newLine);
+        itoa(p_rdp->vdim, c_numaux, N_BYTES);
+        (void)concat_x3(p_kbuf, "   - Dimension de visualizacion de componentes: ", c_numaux, s_newLine);
+        //(void)concat_x3(p_kbuf, "   - Disparos visibles de RDPG: ", p_rdp->s_header_disparos, s_newLine);
         break;
 
       case ID_INFO_MEMORY:
@@ -2651,6 +2730,24 @@ int get_vHDelement(RDPG_o *p_rdp, char *p_entrada)
     p_rdp->error_code = -EC_componenteNoCreado;
     return -EC_componenteNoCreado;
   }
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ * @brief      Esta funcion se encarga de configurar el modo por defecto la RDPG_o enviada por parametro.
+ *
+ * @param      rdp   Puntero de la direccion de memoria del RDPG_o que se desea configurar.
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+static void config_default_mode(RDPG_o *p_rdp)
+{
+  set_read_mode(p_rdp, ID_MCOMPONENT_MODE);   /* Se configura por defecto el modo de lectura de componente matriz. */
+  set_read_smode(p_rdp, ID_MCOMP_SMODE);      /* Se configura por defecto el sub-modo de lectura de informacion de componente matriz. */
+  set_select_comp(p_rdp, (int)mII);           /* Se muestra por defecto la matriz de incidencia. */
+  p_rdp->posVP = 0;
+  p_rdp->posVT = 0;
+  p_rdp->vdim = MAX_VDIM;
+  p_rdp->shot_result = (int)SHOT_INIT;
+  p_rdp->error_code = EC_NULL;
 }
 
 

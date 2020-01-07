@@ -1,11 +1,11 @@
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------
- * Libreria C++ de Device Driver MatrixmodG Linux.
+ * Libreria C++ de Device Driver Linux MatrixmodG (archivo fuente - source file).
  * 
  * 
- * Esta es una libreria creada para la gestion de Redes de Petri Generalizadas (RDPG) en el espacio kernel mediante la interaccion de llamadas al sistema
- * con el file device "/proc/matrixmodG_fd" del Device Driver MatrixmodG.
+ * Esta libreria contiene las declarciones y definiciones de la clase RDPG_Driver para gestionar Redes de Petri Generalizadas (RDPG) en el espacio usuario
+ * con ayuda del espacio kernel mediante la interaccion de llamadas al sistema con el file device "/proc/matrixmodG_fd" del Device Driver MatrixmodG.
  * 
- * Todas las funciones son transparentes para el usuario final, haciendo uso de la clase RDPG_Driver para la gestion de objetos RDPG en el kernel desde 
+ * Todas las funciones son transparentes para el usuario final, haciendo uso de la clase RDPG_Driver para la gestion de objetos RDPG en el kernel desde
  * el espacio usuario.
  * 
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/

@@ -1,3 +1,18 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Device Driver Linux MatrixmodG (archivo fuente - source file).
+ * 
+ * 
+ * Este archivo forma parte del codigo fuente del Device Driver Linux MatrixmodG. Este driver se encarga de gestionar Redes de Petri Generalizadas (RDPG) 
+ * en eñ kernel de Linux mediante las solicitudes que indican las aplicaciones de usuario al archivo de dispositivo "/proc/matrixmod_fd".
+ * 
+ * Las RDPG se tratan como objetos RDPG_o creado como clase desde la libreria de kernel RDPG_object.h/.c.
+ * 
+ * La libreria fue testeada por un conjunto de pruebas unitarias e integrales mediante el framework Kernel Test Framework (KTF). Es por lo cual la libreria 
+ * durante un proceso de ejecucion de pruebas hace uso de las librerias KTF y habilita todas las funcionalidades del framework, en caso contrario por 
+ * defecto, en proceso de ejecucion estandar, se ignoran todas las definiciones de KTF.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include "matrixmodG.h"            /* Inclusion de enumeraciones, funciones, y variables publicas utlizadas por matrixmod.c */
 
 char kbuf[BUFFER_LENGTH_RD];
@@ -127,7 +142,7 @@ static ssize_t matrixmodG_write(struct file *filp, const char __user *buf, size_
 
     }else if( sscanf(kbuf,"RDPG add mIRe %s", entrada2) == 1){
       
-      (void)RDP1.methods->add_value_in_mcomponent(&(RDP1.mIRe), entrada2);
+      (void)RDP1.methods->add_value_in_mIRe(&RDP1, entrada2);
 
     }else if( sscanf(kbuf,"RDPG add mIR %s", entrada2) == 1){
       

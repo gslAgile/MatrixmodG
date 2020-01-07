@@ -1,3 +1,19 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Libreria MV_object.h (archivo cabecera - header file).
+ * 
+ * 
+ * Esta libreria contiene las declaraciones y definiciones de las entidades matrices y vectores (matrix_o y vector_o) y sus metodos asociados. 
+ * Estas entidades permiten gestionar las matrices y vectores como objetos en el kernel de Linux. 
+ * 
+ * La libreria gestiona memoria dinamica de manera manual haciendo uso del conjunto de funciones de la familia KMALLOC y VMALLOC, de acuerdo a la
+ * configuracion previamente establecida sobre el objeto se utiliza un mecanismo en particular.
+ * 
+ * La libreria fue testeada por un conjunto de pruebas unitarias e integrales mediante el framework Kernel Test Framework (KTF). Es por lo cual la libreria 
+ * durante un proceso de ejecucion de pruebas, hace uso de las librerias KTF y habilita todas las funcionalidades del framework, en caso contrario por
+ * defecto, en proceso de ejecucion estandar, se ignoran todas las definiciones de KTF.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef MATRICES_LIB_H
 #define MATRICES_LIB_H
 
