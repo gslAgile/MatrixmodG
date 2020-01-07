@@ -1,3 +1,17 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Libreria RDPG_object.hpp/.cpp (archivo cabecera - header file).
+ * 
+ * 
+ * Esta libreria contiene las declaraciones y definiciones de la clase RDPG y sus metodos asociados. Esta clase permite
+ * gestionar las RDPG como objetos. 
+ * 
+ * 
+ * La libreria fue migrada desde codigo C del driver MatrixmodG, es el codigo replica en C++, la lubreria de C fue testeada por un conjunto de pruebas unitarias
+ * e integrales mediante el framework Kernel Test Framework (KTF). Pero no se repitieron las pruebas unitarias e integrales desde el espacio usuario, en caso de
+ * ser realizado se recomienda hacerlo con el framework de pruebas GTEST.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef RDPG_ULIB_H
 #define RDPG_ULIB_H 			/* ULIB: por biblioteca de espacio usuario. */
 

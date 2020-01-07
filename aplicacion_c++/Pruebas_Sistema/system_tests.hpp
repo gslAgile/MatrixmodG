@@ -1,10 +1,21 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ *  Libreria system_tests.hpp/.cpp (archivo cabecera - header file).
+ *  
+ *  Esta libreria contiene todas las pruebas de sistema que se realizan sobre la clase monitor en la gestion de su recurso compartido del tipo RDPG.
+ *  
+ *  Las pruebas realizadas sirven para la medicion del rendimiento que existe en la gestion de RDPG, recurso protegido por la clase monitor.
+ *  Tambien se realizan pruebas relacionadas al multiprocesamiento analizando si la respuesta del monitor es correcta frente a las solicitudes realizadas.
+ *  
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef SYSTEM_TESTS_H
 #define SYSTEM_TESTS_H
 
 #include "../app.hpp"
-#include "../monitorCA2.hpp"
+#include "../monitor.hpp"
+//#include "../monitorCA2.hpp"
 
-#define N_MUESTRAS	30
+#define N_MUESTRAS	50
 
 /* Variables globales de pruebas de sistema automatizadas*/ 
 /* Muestras */

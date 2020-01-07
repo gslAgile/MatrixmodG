@@ -1,3 +1,17 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------
+ * Libreria monitor.hpp/.cpp (archivo cabecera - header file).
+ * 
+ * 
+ * Esta libreria contiene las declarciones y definiciones de la clase monitor para para la proteccion de recursos compartidos de la concurrencia de 
+ * subprocesos de espacio usuario.
+ * 
+ * Las protecciones de los recursos compartidos se logran brindando exclusion mutua a los subprocesos con el uso de mutex. Por otro lado el control de
+ * subprocesos se realiza mediante el uso de variables de condion (condition_variable) estructuras brindadas por la libreria estandar de C++.
+ *
+ * Recurso compartido a proteger: Redes de petri Generalizadas. Clase RDPG desde libreria RDPG_object.hpp/cpp.
+ * 
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #ifndef MONITOR_ULIB_H
 #define MONITOR_ULIB_H /* ULIB: por biblioteca de espacio usuario. */
 

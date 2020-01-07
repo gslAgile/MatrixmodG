@@ -1,11 +1,21 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ *  Libreria system_tests.hpp/.cpp (archivo fuente - source file).
+ *  
+ *  Esta libreria contiene todas las pruebas de sistema que se realizan sobre la clase monitor en la gestion de su recurso compartido del tipo RDPG.
+ *  
+ *  Las pruebas realizadas sirven para la medicion del rendimiento que existe en la gestion de RDPG, recurso protegido por la clase monitor.
+ *  Tambien se realizan pruebas relacionadas al multiprocesamiento analizando si la respuesta del monitor es correcta frente a las solicitudes realizadas.
+ *  
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include "system_tests.hpp"
 
 /* Archivos de importacion de RDPG: gn: global name*/
-string gn_mII = "./RDPG/identity_1000x1000/mII.txt";
-string gn_mIH = "./RDPG/identity_1000x1000/mIH.txt";
-string gn_mIR = "./RDPG/identity_1000x1000/mIR.txt";
-string gn_mIRe = "./RDPG/identity_1000x1000/mIRe.txt";// = "mIRe.txt";
-string gn_vMI = "./RDPG/identity_1000x1000/vMI.txt";
+string gn_mII = "./RDPG/identity_10x10/mII.txt";
+string gn_mIH = "./RDPG/identity_10x10/mIH.txt";
+string gn_mIR = "./RDPG/identity_10x10/mIR.txt";
+string gn_mIRe = "./RDPG/identity_10x10/mIRe.txt";// = "mIRe.txt";
+string gn_vMI = "./RDPG/identity_10x10/vMI.txt";
 
 
 string CA_mII = "./Caso_Aplicacion/mII.txt";
