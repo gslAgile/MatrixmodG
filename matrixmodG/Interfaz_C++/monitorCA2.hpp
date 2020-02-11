@@ -12,7 +12,7 @@
 using namespace std;
 
 
-#define		N_OPERACIONES		100000
+#define		N_OPERACIONES		1000
 
 
 class monitorCA2 {

@@ -36,9 +36,9 @@ int main()
 	if(entrada==1)
 	{
 		/* Importo matrices desde archivos, y realizo conexion con driver. Mediante file descriptor con device file /proc/matrixmodG_fd*/
-		//new_MatrixmodGDriver(&driver, "../Caso_Aplicacion/mII.txt", "mIH.txt", "mIR.txt", NULL, "vMI.txt");
+		new_MatrixmodGDriver(&driver, "../Caso_Aplicacion/mII.txt", "../Caso_Aplicacion/mIH.txt", "../Caso_Aplicacion/mIR.txt", "../Caso_Aplicacion/mIRe.txt", "../Caso_Aplicacion/vMI.txt");
 		//new_MatrixmodGDriver(&driver, "./RDPG/identity_1000x1000/mII.txt", "./RDPG/identity_1000x1000/mIH.txt", "./RDPG/identity_1000x1000/mIR.txt", "./RDPG/identity_1000x1000/mIRe.txt", "./RDPG/identity_1000x1000/vMI.txt");
-		new_MatrixmodGDriver(&driver, "./RDPG/identity_1000x1000/mII.txt", NULL, NULL, NULL, "./RDPG/identity_1000x1000/vMI.txt");
+		//new_MatrixmodGDriver(&driver, "./RDPG/identity_1000x1000/mII.txt", NULL, NULL, NULL, "./RDPG/identity_1000x1000/vMI.txt");
 
 		printf("\n\n");
 

@@ -880,20 +880,20 @@ void shoot_RDPG(DriverRDPG_o *p_DriverObj, int p_transicion)
 	t_ini2 = clock();
 	
 	// Write sobre driver -> se realiza disparo
-	(void)write_matrixmodG(p_DriverObj, comando);
+	if(write(p_DriverObj->my_fd, comando, N_CMD) == 1)
+	{
+		// almacenamos cadena_read
+		printf("\n	--> El disparo de transicion T%d fue exitoso. \n", p_transicion);
+	}
+	else /* write(p_DriverObj->my_fd, comando, N_CMD) == 0 */
+	{
+		printf("\n	--> Fallo en disparo de transicion T%d. \n", p_transicion);
+	}
 
 	/* Finaliza cuenta de tiempo. */
 	t_fin2 = clock();
 	t_fin = omp_get_wtime();
 
-	// indicamos a driver que muestre resultado de ultimo disparo
-	if(write_matrixmodG(p_DriverObj, "RDPGinfo shot_result\n") == 0)
-	{
-		// almacenamos cadena_read
-		(void)read_matrixmodG(p_DriverObj,cadena_read);
-	}
-
-	printf("\n	-->	%s", cadena_read);
 
 	if(p_DriverObj->LIBMATRIXMODG_MSG_TIMEOP == MESSAGES_ON)
 	{
