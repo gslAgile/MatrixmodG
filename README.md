@@ -1,12 +1,12 @@
 ![Alt text](img/matrixmodG_intro5.png "Header MatrixMoG Project")
 
 # Proyecto MatrixmodG
-El proyecto MatrixmodG se basa en la creación de un device driver  Linux para gestionar Redes de Petri Generalizadas en el kernel.
-Su objetivo principal es independizarse de cualquier lenguaje de programación para brindar su funcionalidades y rendimiento a todo el espacio usuario.
+El proyecto MatrixmodG se basa en la creación de un device driver Linux para la gestión Redes de Petri Generalizadas en el kernel.
+Su objetivo principal es aprovechar la capacidad de comunicación entre procesos del kernel y su rendimiento en la capa de aplicación, permitiendo la solución, simulación y control de problemas de concurrencia complejos mediante el uso de RDPG para programas y aplicaciones de concurrencia. Además la herramienta es totalmente independiente del lenguaje de programación a utilizar en espacio usuario y permite la solución, simulación y control de los problemas de concurrencia con una o multiples aplicaciones simultáneamente.
 
-Con la misma idea de Linux, que se democratiza como sistema operativo, el proyecto MatrixmodG se democratiza para gestionar RDPG en el kernel de Linux con el objetivo de obtener un alto rendimiento y todas sus funcionalidades sobre cualquier lenguaje a través de la creación de sus respectivas librerías de espacio usuario.
+Al igual que Linux, el proyecto MatrixmodG se democratiza en referencia a como gestionar RDPG en el kernel de Linux con el objetivo de obtener sus benéficos desde aplicaciones y programas de espacio usuario.
 
-El proyecto MatrixmodG es un proyecto open source (a código abierto) permitiendo que el proyecto sea libremente utilizado, estudiado, redistribuido y modificado por cualquier persona con los conocimientos informáticos y teóricos adecuados.
+El proyecto MatrixmodG es un proyecto open source (a código abierto) permitiendo ser libremente utilizado, estudiado, redistribuido y modificado por cualquier persona con los conocimientos informáticos y teóricos adecuados.
 
 Contacto de autor gsosaludu@gmail.com.
 
@@ -14,10 +14,17 @@ Keywords: Red de Petri Generalizada, Device Driver Linux, Ambiente Multicore, Pr
 
 
 Ver la [Wiki](https://github.com/gslAgile/Proyecto-MatrixmodG/wiki) para mas detalles.
+<br>
 
 # Descarga de Proyecto MatrixMoG
 ![Alt text](img/descarga.gif "Descarga de Proyecto MatrixmodG") <br>
 
 
-# Instalacion de DDL MatrixModG
-![Alt text](img/instalacion.gif "Instalacion de DDL MatrixmodG")<br>
+# Instalación de DDL MatrixModG
+![Alt text](img/instalacion.gif "Instalación de DDL MatrixmodG")<br>
+
+<!-- Comentarios
+
+# Uso de librería libMatrixmodG
+
+-->
