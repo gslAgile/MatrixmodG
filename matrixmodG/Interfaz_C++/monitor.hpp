@@ -59,6 +59,7 @@ public:
 	int get_TokensPlace(size_t);
 	void set_mtimeop_omp(double p_time) { mtimeop_omp = p_time; }
 	void set_mtimeop_ltime(double p_time) { mtimeop_ltime = p_time; }
+	void set_kernel_RDPG(bool val) { red.set_kernel_RDPG_sec(val);}
 
 
 	/* Metodos de monitor con proteccion de recurso RDPG. */
@@ -72,12 +73,13 @@ public:
 	bool empty();
 	void print_vcomp(int);
 	void import_RDPG(string, string, string, string, string);
-	int shoot_RDPG(int, SHOT_MODE);
+	int shoot_RDPG(int);
 	void print_allComp();
 	void print_RDPGinfo();
 	void ashoot_RDPG(int, unique_lock<mutex>&);
 	void deleteRDPG();
 	int notify_next_shoot(int);
+	void notify_thread(int);
 
 	/**/
 	void generar_tarea_m();

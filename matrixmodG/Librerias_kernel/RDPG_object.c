@@ -55,6 +55,7 @@ struct RDPG_methods RDPG_vtable =
   .shoot_rdpg = disparar_rdpg,
   .read_rdpg_component = read_rdpg_component,
   .read_rdpg_info = read_rdpg_info,
+  .rdpg_empty = rdpg_empty,
   .get_TokensPlace = get_TokensPlace,
   .get_vHDelement = get_vHDelement,
   
@@ -79,6 +80,7 @@ struct RDPG_methods RDPG_vtable =
   .SMPs_add_value_vG = SMPs_add_value_vG,
   .SMPs_update_work_components = SMPs_update_work_components,
   .SMPs_load_vcomp_with_vcomp = SMPs_load_vcomp_with_vcomp,
+  .SMPs_rdpg_empty = SMPs_rdpg_empty,
   .SMPs_get_TokensPlace = SMPs_get_TokensPlace,
   .SMPs_get_vHDelement = SMPs_get_vHDelement,
   .SMPs_set_MemAllocMode = SMPs_set_MemAllocMode,
@@ -1210,7 +1212,8 @@ extern void update_vW(RDPG_o *p_rdp)
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 extern void update_vB(RDPG_o *p_rdp)
 {
-    int i, j;
+    int i;
+    int j;
 
    if((p_rdp->vB.mc) && (p_rdp->vQ.mc) && (p_rdp->mIH.mc)) /* Si existen componentes afectados. Actualizo valores vB. */
    {
@@ -1253,7 +1256,8 @@ extern void update_vB(RDPG_o *p_rdp)
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 extern void update_vL(RDPG_o *p_rdp)
 {
-    int i, j;
+    int i;
+    int j;
 
     if((p_rdp->vL.mc) && (p_rdp->vW.mc) && (p_rdp->mIR.mc)) /* Si existen componentes afectados. Actualizo valores vL. */
     {
@@ -1293,7 +1297,8 @@ extern void update_vL(RDPG_o *p_rdp)
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 extern void update_vG(RDPG_o *p_rdp)
 {
-    int i, j;
+    int i;
+    int j;
 
     if(p_rdp->vG.mc) /* Si existen componentes afectados. Actualizo valores vG. */
     {
@@ -1317,7 +1322,8 @@ extern void update_vG(RDPG_o *p_rdp)
  *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
 extern void update_vA(RDPG_o *p_rdp)
 {
-    int i, j;
+    int i;
+    int j;
 
     if((p_rdp->vA.mc) && (p_rdp->mIRe.mc) && (p_rdp->vMA.mc)) /* Si existen componentes afectados. Actualizo valores vA. */
     {
@@ -2230,9 +2236,10 @@ extern int print_rdpg_mcomponent(matrix_o *p_mo, char *p_kbuf, size_t p_posP, si
 {
   char c_aux[N_BYTES];          /* Cadena auxiliar que almacena los enteros en una cadena de caracteres (string). */
   memset(c_aux, '\0', N_BYTES);
-  int i,j, nr_bytes;            /* i,j : recorren la matriz. */
-                                /* nr_bytes: numero de bytes leidos. */
-  size_t vp, vt;                /* vp: plazas visualizadas. vt: transiciones visualizadas. */
+  int i;
+  int j;                   /* i,j : recorren la matriz. */
+  int nr_bytes;            /* nr_bytes: numero de bytes leidos. */
+  size_t vp, vt;           /* vp: plazas visualizadas. vt: transiciones visualizadas. */
   nr_bytes = 0;
 
   if(p_mo->mc == OBJ_CREATED){
@@ -2321,9 +2328,9 @@ extern int print_rdpg_mcomponent2(RDPG_o *p_rdp, int p_mcomp_id, char *p_kbuf)
 {
   char c_aux[N_BYTES];  /* Cadena auxiliar que almacena los enteros en una cadena de caracteres (string). */
   memset(c_aux, '\0', N_BYTES);
-  int i,j, nr_bytes;    /* i,j : recorren la matriz */
-                        /* k: va corriendo el puntero del buffer del kernel kbuf que luego se copia al buffer del espacio usuario;*/
-                        /* nr_bytes: numero de bytes leidos.*/
+  int i;                /* i,j : recorren la matriz */
+  int j;                /* k: va corriendo el puntero del buffer del kernel kbuf que luego se copia al buffer del espacio usuario;*/
+  int nr_bytes;         /* nr_bytes: numero de bytes leidos.*/
   size_t vp, vt;        /* vp: plazas visualizadas. vt: transiciones visualizadas. */
   nr_bytes = 0;
 
@@ -2413,8 +2420,8 @@ extern int print_rdpg_vcomponent(vector_o *p_vo, char *p_kbuf, size_t posV, size
 {
   char c_aux[N_BYTES];          /* Cadena auxiliar que almacena los enteros en una cadena de caracteres (string). */
   memset(c_aux, '\0', N_BYTES);
-  int i, nr_bytes;              /* i : se usa para recorrer vector. */
-                                /* nr_bytes: numero de bytes leidos. */
+  int i;              /* i : se usa para recorrer vector. */
+  int nr_bytes;       /* nr_bytes: numero de bytes leidos. */
   size_t ve;
   nr_bytes = 0;
 
@@ -2641,6 +2648,23 @@ static void getString_allocMode(RDPG_o *p_rdp)
 
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ * @brief      Este metodo indica si el objjeto RDPG enviado por parametro tiene cargada una RDPG o se encuentra vacia.
+ *
+ * @param      p_rdp  Puntero a la direccion de memoria del objeto RDPG sobre el que se consulta.
+ *
+ * @return     El retorno sera:
+ *              - 0 (false): si la RDPG enviada por parametro se encuentra cargada en el kernel.
+ *              - 1 (true): si la RDPG enviada por parametro se encuentra vacia.
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+int rdpg_empty(RDPG_o *p_rdp)
+{
+  if(p_rdp->mc)
+    return 0;
+
+  return 1;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
  * @brief      Esta funcion retorna el numero de tokens de una plaza de la RDPG. La plaza es indicada por a cadena de caracter enviada por parametro.
  *
  * @param      p_rdp      Puntero a la direccion de memoria del objeto RDPG_o sobre el que se realiza la consulta.
@@ -2824,6 +2848,21 @@ void SMPs_load_vcomp_with_vcomp(RDPG_o *p_rdp, int p_vcomp_dst, int p_vcomp_src)
   p_rdp->methods->load_vcomp_with_vcomp(p_rdp, p_vcomp_dst, p_vcomp_src);
 
   write_unlock(&p_rdp->lock_RDPG);
+}
+
+
+int SMPs_rdpg_empty(RDPG_o *p_rdp)
+{
+  int rt_fempty;
+
+  write_lock(&p_rdp->lock_RDPG);
+
+  rt_fempty = rdpg_empty(p_rdp);
+
+  write_unlock(&p_rdp->lock_RDPG);
+
+  return rt_fempty;
+
 }
 
 

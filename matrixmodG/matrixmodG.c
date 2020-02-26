@@ -68,7 +68,7 @@ int matrixmodG_release(struct inode *inode, struct file *file)
 static ssize_t matrixmodG_write(struct file *filp, const char __user *buf, size_t len, loff_t *off) {
 
   int available_space = BUFFER_LENGTH_WR; /* espacio disponible */
-  int rt_op = -EC_falloADD; /* retorno entero de operaciones. */
+  //int rt_op = -EC_falloADD; /* retorno entero de operaciones. */
   
   char kbuf[BUFFER_LENGTH_WR];
   char entrada[COMMANDSIZE];
@@ -311,6 +311,10 @@ else if( ( sscanf(kbuf,"RDPG cat %s\n", entrada) == 1)){
     
       RDP1.methods->set_read_mode(&RDP1, ID_INFO_SHOT_RESULT);
 
+    }else if ( strcmp(entrada,"empty") == 0){
+    
+      return RDP1.methods->SMPs_rdpg_empty(&RDP1);
+
     }else
     {
       RDP1.methods->set_read_mode(&RDP1, ID_ERROR_MODE);
@@ -405,7 +409,7 @@ static int __init init_matrixmodG(void)
 	} 
   else {
   	RDPG_firm();
-    printk(KERN_INFO "matrixmodG_info: Modulo cargado en kernel.\n");
+    printk(KERN_INFO "matrixmodG_info: DDL MatrixmodG instalado en kernel exitosamente.\n");
     
     new_RDPG(&RDP1, "RDP1"); /* Construccion de un nuevo objeto RDPG_o con nombre RDP1. */
 	}
@@ -433,7 +437,7 @@ static void __exit exit_matrixmodG(void)
 
 #endif
 
-  printk(KERN_INFO "matrixmodG_info: Modulo descargado de kernel.\n");
+  printk(KERN_INFO "matrixmodG_info: DDL MatrixmodG desinstalado del kernel exitosamente.\n");
 }
 
 module_init(init_matrixmodG);

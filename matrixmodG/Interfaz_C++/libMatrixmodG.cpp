@@ -18,7 +18,7 @@ int RDPG_Driver::n_objects=0; /* Inicializo contador global de objetos. */
 const char *cmd_addm[ID_MC_END] = {"RDPG add mII ","RDPG add mIH ","RDPG add mIR ","RDPG add mIRe "};
 const char *cmd_addv[ID_VC_END] = {"RDPG add vMI "};
 const char *cmd_RDPGinfo[ID_VIEW_END] = {"RDPGinfo name\n","RDPGinfo places\n","RDPGinfo transitions\n","RDPGinfo shots\n","RDPGinfo memory\n","RDPGinfo comp\n",
-"RDPG cat mII\n","RDPG cat mIH\n","RDPG cat mIR\n","RDPG cat mIRe\n","RDPG cat mD\n",
+"RDPGinfo empty\n", "RDPG cat mII\n","RDPG cat mIH\n","RDPG cat mIR\n","RDPG cat mIRe\n","RDPG cat mD\n",
 "RDPG cat vMI\n","RDPG cat vMA\n","RDPG cat vMN\n","RDPG cat vQ\n", "RDPG cat vW\n","RDPG cat vE\n",
 "RDPG cat vB\n","RDPG cat vL\n","RDPG cat vG\n","RDPG cat vA\n","RDPG cat vUDT\n","RDPG cat vEx\n","RDPG cat vHQCV\n","RDPG cat vHD\n"};
 
@@ -44,8 +44,15 @@ char libCadena[USR_BUF_SIZE];
 RDPG_Driver::~RDPG_Driver() { 
 
 	n_objects--;
-	//matrixmodG_delRDPG();
-	(void)write_matrixmodG((char *)cmd_delRDPG);	/* Se elimina RDPG en driver con comando write*/
+	
+	if(kernel_RDPG_sec)	/* Usuario elije eliminar la RDPG del kernel o no eliminarla. */
+	{
+		matrixmodG_delRDPG(); 
+	}
+	else 	/* Se elimina directamente la RDPG del kernel. */
+	{
+		(void)write_matrixmodG((char *)cmd_delRDPG);	/* Se elimina RDPG en driver con comando write*/
+	}
 }
 
 
@@ -63,24 +70,40 @@ RDPG_Driver::RDPG_Driver(string p_name, size_t p_places, size_t p_transicions)
 	/* Determino numero de plazas y transiciones de RDPG desde archivo p_mII (su matriz de incidencia). */
 	plazas = p_places;
 	transiciones = p_transicions;
+	kernel_RDPG_sec = false; 		/*Se deja sin proteccion la RDPG del kernel. */
 
 	if( (plazas > 0) && (transiciones > 0))
 	{
-		/* Redimensiono los componentes matrix_o y vector_o de la RDPG. */
-		resize_allmatrixs();
-		resize_allvectors();
+		int empty = matrixmodG_empty();
+		if(empty)
+		{
+			/* Redimensiono los componentes matrix_o y vector_o de la RDPG. */
+			resize_allmatrixs();
+			resize_allvectors();
 
-		/* Se establece conexion con file device de driver MatrixmodG. */
-		connect_driver = DISABLED_CONNECTION; 					/* Inicia flag de conexion deshabilitada.*/
-		connect_driverMatrixmodG();								/* Se establece conexion con driver.*/
-		//system_test_mode = 0; 								/* Inicia por defecto modo de pruebas de sistema desactivado.*/
+			/* Se establece conexion con file device de driver MatrixmodG. */
+			connect_driver = DISABLED_CONNECTION; 					/* Inicia flag de conexion deshabilitada.*/
+			connect_driverMatrixmodG();								/* Se establece conexion con driver.*/
+			//system_test_mode = 0; 								/* Inicia por defecto modo de pruebas de sistema desactivado.*/
 
-		/* Creo RDPG con plazas y transiciones siempre que se haya importado matriz de incidencia I minimamente. */
-		matrixmodG_createRDPG();
+			/* Creo RDPG con plazas y transiciones siempre que se haya importado matriz de incidencia I minimamente. */
+			matrixmodG_createRDPG();
+		}
+		else if(empty == 0){ /* Ya ai RDPG previamente cargada en kernel. Se establece solo conexion.*/
+			
+			/* Se establece conexion con file device de driver MatrixmodG. */
+			connect_driver = DISABLED_CONNECTION; 					/* Inicia flag de conexion deshabilitada.*/
+			connect_driverMatrixmodG();								/* Se establece conexion con driver.*/
+			cout << "RDPG previamente cargada en kernel. Se establece solo conexion con DDL MatrixmodG." << endl;
+		}
+		else{
+			cout << "Fallo la connexion con DDL MatrixmodG." << endl;
+		}
+
 	}
 	else
 	{
-		cout << "No se pudo importar archivos *.txt de los componentes de RDPG: (" << name << ")." << endl;
+		cout << "No se pudo crear componentes de RDPG para: (" << p_places << " plazas) y" << p_transicions << " transiciones) ." << endl;
 	}
 
 	obj_id = (int)n_objects;
@@ -105,41 +128,55 @@ RDPG_Driver::RDPG_Driver(string p_name, string p_mII, string p_mIH, string p_mIR
 	/* Determino numero de plazas y transiciones de RDPG desde archivo p_mII (su matriz de incidencia). */
 	plazas = get_fileLines(p_mII);
 	transiciones = get_lineElements(p_mII);
+	kernel_RDPG_sec = false; 		/*Se deja sin proteccion la RDPG del kernel. */
 
 	if((plazas > 0) && (transiciones > 0))
 	{
-		/* Redimensiono los componentes matrix_o y vector_o de la RDPG. */
-		resize_allmatrixs();
-		resize_allvectors();
+		int empty = matrixmodG_empty();
+		if(empty)
+		{
+			/* Redimensiono los componentes matrix_o y vector_o de la RDPG. */
+			resize_allmatrixs();
+			resize_allvectors();
 
-		/* Se carga matrix_o con valores de acuerdo a archivos .txt de RDPG.*/
-		import_RDPG(p_mII, p_mIH, p_mIR, p_mIRe, p_vMI);
+			/* Se carga matrix_o con valores de acuerdo a archivos .txt de RDPG.*/
+			import_RDPG(p_mII, p_mIH, p_mIR, p_mIRe, p_vMI);
 
-		/* Se establece conexion con file device de driver MatrixmodG. */
-		connect_driver = DISABLED_CONNECTION; 					/* Inicia flag de conexion deshabilitada.*/
-		connect_driverMatrixmodG();								/* Se establece conexion con driver.*/
-		//system_test_mode = 0; 								/* Inicia por defecto modo de pruebas de sistema desactivado.*/
+			/* Se establece conexion con file device de driver MatrixmodG. */
+			connect_driver = DISABLED_CONNECTION; 					/* Inicia flag de conexion deshabilitada.*/
+			connect_driverMatrixmodG();								/* Se establece conexion con driver.*/
 
-		/* Creo RDPG con plazas y transiciones siempre que se haya importado matriz de incidencia I minimamente. */
-		matrixmodG_createRDPG();
-		
-		/* Cargo valores de mII a RDPG de p_DriverObj matrixmodG */
-		matrixmodG_addm(_mII);
-		
-		/* Cargo valores de matriz de inicidencia H */
-		matrixmodG_addm(_mIH);
+			/* Creo RDPG con plazas y transiciones siempre que se haya importado matriz de incidencia I minimamente. */
+			matrixmodG_createRDPG();
+			
+			/* Cargo valores de mII a RDPG de p_DriverObj matrixmodG */
+			matrixmodG_addm(_mII);
+			
+			/* Cargo valores de matriz de inicidencia H */
+			matrixmodG_addm(_mIH);
 
-		/* Cargo valores de matriz de inicidencia R */
-		matrixmodG_addm(_mIR);
+			/* Cargo valores de matriz de inicidencia R */
+			matrixmodG_addm(_mIR);
 
-		/* Cargo valores de matriz de transiciones reset Re */
-		matrixmodG_addm(_mIRe);
+			/* Cargo valores de matriz de transiciones reset Re */
+			matrixmodG_addm(_mIRe);
 
-		/* Cargo valores de vectorde marcado inicil vMI a RDPG de matrixmodG */
-		matrixmodG_addv(_vMI);
+			/* Cargo valores de vectorde marcado inicil vMI a RDPG de matrixmodG */
+			matrixmodG_addv(_vMI);
 
-		/* Confirmacion de componentes enviados a RDPG del kernel. al enviar este comando, la RDPG del kernel termina de calcular el resto de componentes.*/
-		matrixmodG_confirmRDPG();
+			/* Confirmacion de componentes enviados a RDPG del kernel. al enviar este comando, la RDPG del kernel termina de calcular el resto de componentes.*/
+			matrixmodG_confirmRDPG();
+		}
+		else if(empty == 0){ /* Ya ai RDPG previamente cargada en kernel. Se establece solo conexion.*/
+			
+			/* Se establece conexion con file device de driver MatrixmodG. */
+			connect_driver = DISABLED_CONNECTION; 					/* Inicia flag de conexion deshabilitada.*/
+			connect_driverMatrixmodG();								/* Se establece conexion con driver.*/
+			cout << "RDPG previamente cargada en kernel. Se establece solo conexion con DDL MatrixmodG." << endl;
+		}
+		else{
+			cout << "Fallo la connexion con DDL MatrixmodG." << endl;
+		}
 	}
 	else
 	{
@@ -291,6 +328,17 @@ int RDPG_Driver::get_vHDelement(size_t p_transicion)
 		error_code = -EC_datoIncorrecto;
 		return -EC_datoIncorrecto;
 	}
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ * @brief      Este metodo setea la variable kernel_RDPG_sec de un objeto RDPG, con el valor enviado por parametro.
+ *
+ * @param[in]  value  Valor booleano para setear sobre la variable kernel_RDPG_sec.
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+void RDPG_Driver::set_kernel_RDPG_sec(bool value)
+{
+	kernel_RDPG_sec = value;
 }
 
 
@@ -1272,6 +1320,27 @@ void RDPG_Driver::matrixmodG_dec_vHQCV(size_t p_transicion)
 	
 	// Write sobre driver -> se realiza disparo
 	(void)write_matrixmodG(cmd);
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ * @brief      Este metodo escribe un comando al DDL matrixmodG, para determinar si la RDPG del kernel se encuentra vacia o no.
+ *
+ * @return     El retorno sera:
+ * 				* 0 (false): si la RDPG del kernel se encuentra cargada y no vacia.
+ * 				* 1 (true): si la RDPG del kernel se encuetra vacia (no cargada) en el kernel.
+ * 				* -EC_falloEmpty: si se produjo un error de escritura con el CMD del DDL MatrixmodG.
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+int RDPG_Driver::matrixmodG_empty()
+{
+	int rt_fempty = write(my_fd, cmd_RDPGinfo[view_infoEmpty], strlen(cmd_RDPGinfo[view_infoEmpty]));
+	
+	if(rt_fempty)
+		return 1;
+	else if( rt_fempty == 0)
+		return 0;
+
+	return -EC_falloEmpty;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------------------

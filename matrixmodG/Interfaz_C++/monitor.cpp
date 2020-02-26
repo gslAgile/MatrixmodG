@@ -232,11 +232,20 @@ void monitor::import_RDPG(string p_mII, string p_mIH, string p_mIR, string p_mIR
 }/* Libera la exclusion mutua al finalizar el bloque de codigo de la funcion. */
 
 
-int monitor::shoot_RDPG(int p_transicion, SHOT_MODE p_mode)
+int monitor::shoot_RDPG(int p_transicion)
 {
 	unique_lock<mutex> l{mtx_monitor};	/* Adquiere exclusion mutua del monitor */
 
-	return 0;//return red.shoot_rdpg(p_transicion, p_mode);
+	int k = red.matrixmodG_shoot_RDPG(p_transicion);
+	
+	if(k)
+	{
+		cout << "	--> Info: Disparo de transicion T"<< p_transicion << " exitoso!!!\n";
+	}
+	else
+		cout << "	--> Info: Fallo disparo de transicion T" << p_transicion << "!!!\n";
+
+	return k;
 
 }/* Libera la exclusion mutua al finalizar el bloque de codigo de la funcion. */
 
@@ -323,6 +332,21 @@ int monitor::notify_next_shoot(int p_transicion)
 		case 11: return 8;
 
 		default: return -1;
+	}
+}
+
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*
+ * @brief      Despierta un hilo dormido de la transicion indicada por parametro.
+ *
+ * @param[in]  p_transicion  Numero de la transicion sobre la que se desea depertar el hilo.
+ *---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+void monitor::notify_thread(int p_transicion)
+{	
+	if((p_transicion>=0))		/* Si ai proximo disparo, despierto hilo de mayor prioridad a disparar. */
+	{
+		if(red.get_vHDelement((size_t)p_transicion)>0)
+			vCV[p_transicion].notify_one();
 	}
 }
 

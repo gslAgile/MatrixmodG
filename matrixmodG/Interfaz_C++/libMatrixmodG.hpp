@@ -86,6 +86,7 @@ typedef enum{
 	view_infoShots,					/**< Identificador de comando que permite ver el numero de disparos.*/
 	view_infoMemory,				/**< Identificador de comando que permite ver la memoria utilizada por RDPG. */
 	view_infoComponent,				/**< Identificador de comando que permite ver informacion asociada a componente seleccionado. */
+	view_infoEmpty,					/**< Identificador de comando que permite conocer si la RDPG del kernel esta cargada o vacia. */
 	view_mII,						/**< Identificador de comando que permite ver matriz de incidencia I. */
 	view_mIH,						/**< Identificador de comando que permite ver la matriz de incidencia H. */
 	view_mIR,						/**< Identificador de comando que permite ver la matriz de incidencia R. */
@@ -162,7 +163,8 @@ enum ERRORS_CODES{
 	EC_CodigoCatComp,
 	EC_posicionIncorrecta,
 	EC_referenciaNula,
-	EC_fileReadFail
+	EC_fileReadFail,
+	EC_falloEmpty
 };
 
 
@@ -179,6 +181,7 @@ private:
 	int connect_driver;
 	int shot_result;				/* Resultado de ultimo disparo realizado en la RDPG_o. Ver enumeracion RDPG_SHOT_RESULT. */
 	int error_code;					/* Codigo del ultimo error sucedido. */
+	bool kernel_RDPG_sec;			/* Variable de proteccion de RDPG del kernel. Si la variable es false la RDPG del kernel sera elimina al finalizar el programa C++.*/
 	size_t posVP;					/* Posicion de la vista de plazas. */
 	size_t posVT;					/* Posicion de la vista de transiciones. */
 	size_t vdim;					/* Dimension de visualizacion de componentes. Es el numero de plazas y transiciones a visualizar en una lectura (read) al driver. */
@@ -252,6 +255,9 @@ public:
 	int get_sensitized(size_t);
 	bool empty();
 
+	/* Setters */
+	void set_kernel_RDPG_sec(bool value);
+
 	/* Metodos de objeto RDPG */
 	void import_RDPG(string p_mII, string p_mIH, string p_mIR, string p_mIRe, string p_vMI);
 	void add_values_mcomp(matrix_o&, string, size_t);
@@ -285,6 +291,7 @@ public:
 	void matrixmodG_set_vG(int, int);
 	void matrixmodG_inc_vHQCV(size_t);
 	void matrixmodG_dec_vHQCV(size_t);
+	int matrixmodG_empty();
 	void itoa(int p_entero, char *p_str, size_t p_len);
 
 	/* Llamadas al sistema sobre driver matrixmodG. */

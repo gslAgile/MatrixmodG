@@ -244,6 +244,7 @@ struct RDPG_methods
 	int (*shoot_rdpg)(RDPG_o *,int, SHOT_MODE);
 	int (*read_rdpg_component)(RDPG_o *,char *, int, int);
 	int (*read_rdpg_info)(RDPG_o *,char *);
+	int (*rdpg_empty)(RDPG_o *);
 	int (*get_TokensPlace)(RDPG_o *, char *);
 	int (*get_vHDelement)(RDPG_o *, char *);
 
@@ -268,6 +269,7 @@ struct RDPG_methods
 	int (*SMPs_add_value_vG)(RDPG_o *,char *);
 	void (*SMPs_update_work_components)(RDPG_o *);
 	void (*SMPs_load_vcomp_with_vcomp)(RDPG_o *, int, int);
+	int (*SMPs_rdpg_empty)(RDPG_o *);
 	int (*SMPs_get_TokensPlace)(RDPG_o *, char *);
 	int (*SMPs_get_vHDelement)(RDPG_o *, char *);
 	void (*SMPs_set_MemAllocMode)(RDPG_o *, char *);
@@ -366,6 +368,7 @@ int add_value_in_mcomponent(matrix_o *p_m, char *p_entrada);
 int add_value_in_vcomponent(vector_o *p_vo, char *p_entrada);
 int add_value_in_mIRe(RDPG_o *p_rdp, char *p_entrada);
 int add_value_vG(RDPG_o *p_rdp, char *p_entrada);
+int rdpg_empty(RDPG_o *p_rdp);
 int get_TokensPlace(RDPG_o *p_rdp, char *p_entrada);
 int get_vHDelement(RDPG_o *p_rdp, char *p_entrada);
 
@@ -424,6 +427,7 @@ int SMPs_disparar_rdpg(RDPG_o *p_rdp, int p_idT, SHOT_MODE p_mode);
 int SMPs_add_value_vG(RDPG_o *,char *);
 void SMPs_update_work_components(RDPG_o *p_rdp);
 void SMPs_load_vcomp_with_vcomp(RDPG_o *p_rdp, int p_vcomp_dst, int p_vcomp_src);
+int SMPs_rdpg_empty(RDPG_o *p_rdp);
 int SMPs_get_TokensPlace(RDPG_o *p_rdp, char *p_entrada);
 int SMPs_get_vHDelement(RDPG_o *p_rdp, char *p_entrada);
 void SMPs_set_MemAllocMode(RDPG_o *p_rdp, char *c_mode);

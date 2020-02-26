@@ -788,6 +788,7 @@ void CPS208_CA_threads5()
 {	
 	/* Se importan los componentes de RDPG. */
 	monitor *red = new monitor("Red de Prueba", CA_mII, CA_mIH, CA_mIR, CA_mIRe, CA_vMI);
+	red->set_kernel_RDPG(true);		/* Protege la RDPG del kernel, para que usuario desida si eliminarla o no al finalizar programa.*/
 
 	thread t2([&]() {
         while(true)
@@ -837,7 +838,9 @@ void CPS208_CA_threads5()
 
 
 	int opcion = 0, op_thread = 0;
-    while( opcion < 6)
+	int n_transicion=0;
+
+    while( opcion != 8)
 	{
 	    cout << "\n--------------------------------------------------------------------------------\n";
     	cout <<  "\t\tAPP C++ - MENU DE OPERACIONES RDPG \n";
@@ -847,7 +850,9 @@ void CPS208_CA_threads5()
         cout <<  "\n  3. Ver vector Ex de transicicones sensibilizadas extendido en la RDPG.";
         cout <<  "\n  4. Ver tiempo total del procesamiento de tareas.";
         cout <<  "\n  5. Repetir prueba.";
-        cout <<  "\n  6. Salir y finalizar hilos.";
+        cout <<  "\n  6. Despertar hilo.";
+        cout <<  "\n  7. Disparar transicion.";
+        cout <<  "\n  8. Salir y finalizar hilos.";
         cout <<  "\n\n   Ingrese numero de opcion: \n";
         cin >> opcion;
 
@@ -883,7 +888,19 @@ void CPS208_CA_threads5()
 			        }
         			break;
 
-        	case 6:
+        	case 6:	
+        			cout <<  "\n   Ingrese numero de transicion sobre la cual despertar un hilo: ";
+        			cin >> n_transicion;
+        			red->notify_thread(n_transicion);
+        			break;
+
+        	case 7:	
+        			cout <<  "\n   Ingrese numero de transicion a disparar: ";
+        			cin >> n_transicion;
+        			red->shoot_RDPG(n_transicion);
+        			break;
+
+        	case 8:
         			op_thread = 1;
         			break;
 
